@@ -30,11 +30,14 @@ pytest tests/ -v
 ## View Documentation
 
 ```bash
+source .venv/bin/activate
 pip install mkdocs-material
 mkdocs serve
 ```
 
 Navigate to http://127.0.0.1:8000
+
+The documentation includes the complete design with the target V2 API and test examples.
 
 ## Tutorial Flow
 
