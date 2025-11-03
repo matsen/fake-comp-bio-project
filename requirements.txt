@@ -1,0 +1,5 @@
+biopython>=1.81
+numpy>=1.24.0
+pytest>=7.4.0
+python-Levenshtein>=0.21.0
+mkdocs-material>=9.0.0
