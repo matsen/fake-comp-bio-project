@@ -5,7 +5,6 @@ from DNA sequences using the UPGMA algorithm.
 """
 
 from typing import Dict
-import numpy as np
 from Bio.Phylo.TreeConstruction import DistanceMatrix, DistanceTreeConstructor
 from Bio.Phylo.BaseTree import Tree
 
