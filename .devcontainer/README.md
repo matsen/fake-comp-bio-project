@@ -11,19 +11,34 @@ This devcontainer provides a complete development environment for the fake-comp-
   - `ruff` for linting and formatting
   - `mkdocs-material` for documentation
 - **Git Tools**: `git`, `git-extras`, and GitHub CLI (`gh`)
-- **Claude Code**: Pre-installed for agentic coding demonstrations
+- **Claude Code**: Pre-installed with persistent auth and settings
+- **Keychain**: SSH key management with passphrase caching
 - **Zsh**: Enhanced shell with helpful aliases and git integration
 - **VS Code Integration**: Pre-configured Python extensions and settings
 
 ## Quick Start
 
-### Using VS Code
+### First-Time Setup
 
-1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. Open this folder in VS Code
-3. Click "Reopen in Container" when prompted (or use Command Palette: "Dev Containers: Reopen in Container")
-4. Wait for the container to build and start
-5. The virtual environment will be auto-created and activated
+1. **Configure GitHub CLI authentication**:
+   - Open VS Code User Settings (Cmd+,)
+   - Search for "terminal.integrated.env"
+   - Click "Edit in settings.json"
+   - Add to your **User settings.json** (NOT workspace):
+     ```json
+     {
+       "terminal.integrated.env.linux": {
+         "GH_TOKEN": "ghp_your_github_token_here"
+       }
+     }
+     ```
+   - Get your token from: https://github.com/settings/tokens/new (needs `repo` scope)
+   - **Note**: This goes in user settings so it stays private and works across all projects
+
+2. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Open this folder in VS Code
+4. Click "Reopen in Container" when prompted
+5. On first launch, press **ESC twice** to skip Claude Code's theme/terminal setup prompts
 
 ### Manual Container Build
 
@@ -59,8 +74,12 @@ mypy fakephylo
 # Format code
 ruff format .
 
-# Run Claude Code (if you have API credentials)
+# Run Claude Code
 claude
+
+# GitHub CLI (pre-authenticated via GH_TOKEN)
+gh issue list
+gh pr create
 ```
 
 ## Shell Aliases
@@ -84,14 +103,67 @@ Key demonstration features:
 - Ready for test-driven development
 - Configured for agentic workflows with Claude Code
 
-## Customization
+## SSH and Git Access
 
-To use Claude Code inside the container, you'll need to mount your credentials:
+The devcontainer is configured to securely access your SSH keys and authenticate with GitHub/remote servers:
+
+### SSH Key Management with Keychain
+- **Keychain** manages SSH key passphrases
+- On first shell startup, you'll be prompted for your SSH key passphrase **once**
+- Keychain caches the unlocked keys for the entire container session
+- All subsequent shells reuse the unlocked keys - no repeated passphrase prompts!
+
+### SSH Agent Forwarding
+- Your `~/.ssh` directory is mounted **read-only** into the container
+- The `SSH_AUTH_SOCK` environment variable is forwarded for SSH agent access
+- **Your private keys never leave the host** - the SSH agent handles authentication
+- Works seamlessly with `git`, `ssh`, and `gh` commands
+
+### Security Benefits
+- Keys are read-only in the container (can't be modified or stolen)
+- SSH agent forwarding means keys are never copied
+- If container is compromised, keys remain safe on host
+- Easy to revoke access by stopping the container
+
+### Testing SSH Access
+```bash
+# Inside the container
+ssh -T git@github.com  # Test GitHub access
+ssh your-remote-server  # Test remote server access
+ssh-add -l             # List loaded SSH keys
+```
+
+## Claude Code Integration
+
+Claude Code is fully integrated with persistent authentication and settings:
+
+### What Persists Across Rebuilds
+- ✅ Claude Code authentication (`.credentials.json`)
+- ✅ Claude Code settings (`settings.json`)
+- ✅ Custom slash commands
+- ✅ Session state and analytics
+
+### Custom Agents and Hooks
+To add custom agents or hooks, mount them in `devcontainer.json`:
 
 ```json
 "mounts": [
-  "source=${HOME}/.claude/.credentials.json,target=/home/vscode/.claude/.credentials.json,type=bind"
+  "source=/path/to/custom-agents,target=/home/vscode/.claude/agents,type=bind",
+  "source=/path/to/hooks,target=/home/vscode/.claude/hooks,type=bind"
 ]
 ```
 
-Add this to `devcontainer.json` if you want to persist Claude Code credentials.
+## GitHub CLI (gh)
+
+GitHub CLI is pre-configured to work via the `GH_TOKEN` environment variable set in your VS Code user settings. This means:
+- ✅ No need to authenticate inside the container
+- ✅ Works immediately on container start
+- ✅ Secure (token stays in user settings, not committed to repos)
+
+## Persistent Data
+
+The following persist across container rebuilds:
+- Claude Code authentication and settings
+- SSH key passphrases (via keychain, per session)
+- GitHub CLI authentication (via GH_TOKEN env var)
+- Your project code and git history (mounted from host)
