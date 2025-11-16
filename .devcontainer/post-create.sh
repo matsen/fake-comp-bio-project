@@ -62,9 +62,9 @@ echo "Upgrading pip..."
 echo "Installing project in dev mode..."
 .venv/bin/pip install -e ".[dev]"
 
-# Install Claude Code agents and commands
-echo "Installing Claude Code agents and commands..."
-mkdir -p /home/vscode/.claude/agents /home/vscode/.claude/commands
+# Install Claude Code agents, commands, and statusline
+echo "Installing Claude Code agents, commands, and statusline..."
+mkdir -p /home/vscode/.claude/agents /home/vscode/.claude/commands /home/vscode/.claude/statusline
 
 # Copy agents from workspace
 if [ -d "/workspace/.claude/agents" ]; then
@@ -76,6 +76,13 @@ fi
 if [ -d "/workspace/.claude/commands" ]; then
     cp /workspace/.claude/commands/*.md /home/vscode/.claude/commands/
     echo "Commands installed from /workspace/.claude/commands/"
+fi
+
+# Copy statusline from workspace
+if [ -d "/workspace/.claude/statusline" ]; then
+    cp /workspace/.claude/statusline/* /home/vscode/.claude/statusline/
+    chmod +x /home/vscode/.claude/statusline/*.js
+    echo "Statusline installed from /workspace/.claude/statusline/"
 fi
 
 echo ""

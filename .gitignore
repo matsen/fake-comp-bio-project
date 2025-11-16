@@ -31,7 +31,8 @@ site/
 .DS_Store
 Thumbs.db
 
-# Claude - ignore user-specific files but keep agents and commands
+# Claude - ignore user-specific files but keep agents, commands, and statusline
 .claude/*
 !.claude/agents/
 !.claude/commands/
+!.claude/statusline/
