@@ -15,6 +15,7 @@
     "GH_TOKEN": "${localEnv:GH_TOKEN}"
   },
   "workspaceFolder": "/workspace",
+  "forwardPorts": [8000],
   "postCreateCommand": "/usr/local/bin/post-create.sh",
   "customizations": {
     "vscode": {

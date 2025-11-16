@@ -1,49 +1,57 @@
 # Fake Computational Biology Project
 
-## Purpose
+A tutorial project for learning agentic coding workflows. Demonstrates building phylogenetic trees using UPGMA with flexible distance metrics.
 
-This is a **tutorial project for learning agentic coding workflows**. It demonstrates building phylogenetic trees using UPGMA with flexible distance metrics.
+## Using This Template
 
-The project is designed for a refactoring exercise:
-- **V1 (current)**: Monolithic implementation with hardcoded Hamming distance
-- **V2 (goal)**: Refactored code with pluggable distance functions (Hamming, Levenshtein, etc.)
+This is a GitHub template repository. To use it:
 
-## Design
+1. Click **"Use this template"** at the top of the page
+2. Create your own copy with a new repository name
+3. Clone and start coding
 
-See [docs/design/phylo-upgma/overview.md](docs/design/phylo-upgma/overview.md) for the complete design including the target V2 API.
+## Getting Started
 
-## Setup
+### Option 1: Devcontainer (Recommended)
+
+This project includes a pre-configured development environment using [VS Code devcontainers](https://code.visualstudio.com/docs/devcontainers/containers).
+
+1. Install [VS Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. Open this project in VS Code
+3. Click "Reopen in Container" when prompted
+
+All tools are pre-installed. See [.devcontainer/README.md](.devcontainer/README.md) for details.
+
+### Option 2: Manual Setup
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
-pip install pytest
+pip install -e '.[dev]'
 ```
 
-## Run Tests
+## Usage
 
 ```bash
+# Run tests
 pytest tests/ -v
+
+# View documentation
+mkdocs serve  # Navigate to http://127.0.0.1:8000
 ```
 
-## View Documentation
+## Project Structure
 
-```bash
-source .venv/bin/activate
-pip install mkdocs-material
-mkdocs serve
-```
+**Current (V1)**: Monolithic implementation with hardcoded Hamming distance
+**Goal (V2)**: Refactored code with pluggable distance functions
 
-Navigate to http://127.0.0.1:8000
-
-The documentation includes the complete design with the target V2 API and test examples.
+See [docs/design/phylo-upgma/overview.md](docs/design/phylo-upgma/overview.md) for the complete design.
 
 ## Tutorial Flow
 
 1. Start with V1 (monolithic, working, tested)
 2. Refactor to separate distance calculation from tree building
-3. Verify all tests still pass (safety net)
-4. Add Levenshtein distance support (now trivial)
+3. Verify all tests still pass
+4. Add Levenshtein distance support (now trivial with clean abstraction)
 
-The refactoring demonstrates clean separation of concerns and the power of abstraction.
+This demonstrates clean separation of concerns and the power of abstraction.
