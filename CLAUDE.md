@@ -60,14 +60,14 @@ Before any pull request, ensure the following workflow is completed:
 2. **Documentation**: Ensure all non-trivial functions have comprehensive docstrings
 3. **Type Hints**: Verify all functions have complete type annotations
 
-#### Test Quality Validation
-4. **Test Implementation Audit**: Scan all test files for partially implemented tests, placeholder implementations, mock objects that return fake data, or `pytest.mark.skip` decorators. All tests must provide real validation with actual implementations
-5. **Integration Tests**: Ensure all tests pass with `pytest tests/ -v`
-6. **Test Coverage**: Verify comprehensive test coverage of new functionality
+#### Architecture and Implementation Review
+4. **Clean Code Review**: Run `@clean-code-reviewer` agent on all new/modified code for architectural review
+5. **Fail-Fast Validation**: Verify no silent fallbacks or error suppression
 
-#### Architecture Review
-7. **Clean Code Review**: Review code for single responsibility, meaningful names, and DRY violations
-8. **Fail-Fast Validation**: Verify no silent fallbacks or error suppression
+#### Test Quality Validation
+6. **Test Implementation Audit**: Scan all test files for partially implemented tests, placeholder implementations, mock objects that return fake data, or `pytest.mark.skip` decorators. All tests must provide real validation with actual implementations
+7. **Integration Tests**: Ensure all tests pass with `pytest tests/ -v`
+8. **Test Coverage**: Verify comprehensive test coverage of new functionality
 9. **Real Test Validation**: Confirm no fake mocks or trivial test implementations
 
 ### Error Handling

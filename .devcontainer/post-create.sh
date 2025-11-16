@@ -62,6 +62,22 @@ echo "Upgrading pip..."
 echo "Installing project in dev mode..."
 .venv/bin/pip install -e ".[dev]"
 
+# Install Claude Code agents and commands
+echo "Installing Claude Code agents and commands..."
+mkdir -p /home/vscode/.claude/agents /home/vscode/.claude/commands
+
+# Copy agents from workspace
+if [ -d "/workspace/.claude/agents" ]; then
+    cp /workspace/.claude/agents/*.md /home/vscode/.claude/agents/
+    echo "Agents installed from /workspace/.claude/agents/"
+fi
+
+# Copy commands from workspace
+if [ -d "/workspace/.claude/commands" ]; then
+    cp /workspace/.claude/commands/*.md /home/vscode/.claude/commands/
+    echo "Commands installed from /workspace/.claude/commands/"
+fi
+
 echo ""
 echo "Environment ready! Run pytest to verify setup."
 echo ""
