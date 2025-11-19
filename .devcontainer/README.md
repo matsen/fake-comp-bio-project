@@ -103,35 +103,33 @@ Key demonstration features:
 - Ready for test-driven development
 - Configured for agentic workflows with Claude Code
 
-## SSH and Git Access
+## SSH Agent Forwarding
 
-The devcontainer is configured to securely access your SSH keys and authenticate with GitHub/remote servers:
+The devcontainer forwards your host's SSH agent via Docker Desktop's socket at `/run/host-services/ssh-auth.sock`. Your keys stay on the host—only the agent connection is forwarded.
 
-### SSH Key Management with Keychain
-- **Keychain** manages SSH key passphrases
-- On first shell startup, you'll be prompted for your SSH key passphrase **once**
-- Keychain caches the unlocked keys for the entire container session
-- All subsequent shells reuse the unlocked keys - no repeated passphrase prompts!
-
-### SSH Agent Forwarding
-- Your `~/.ssh` directory is mounted **read-only** into the container
-- The `SSH_AUTH_SOCK` environment variable is forwarded for SSH agent access
-- **Your private keys never leave the host** - the SSH agent handles authentication
-- Works seamlessly with `git`, `ssh`, and `gh` commands
-
-### Security Benefits
-- Keys are read-only in the container (can't be modified or stolen)
-- SSH agent forwarding means keys are never copied
-- If container is compromised, keys remain safe on host
-- Easy to revoke access by stopping the container
-
-### Testing SSH Access
+### Verify It's Working
 ```bash
-# Inside the container
-ssh -T git@github.com  # Test GitHub access
-ssh your-remote-server  # Test remote server access
-ssh-add -l             # List loaded SSH keys
+# In container
+echo $SSH_AUTH_SOCK   # Should show /run/host-services/ssh-auth.sock
+ssh-add -l            # Should show your key
+ssh -T git@github.com # Test GitHub access
 ```
+
+### Troubleshooting
+
+**"The agent has no identities"**
+1. Check host has keys loaded: `ssh-add -l` on host
+2. On macOS, load keys with: `ssh-add --apple-use-keychain`
+
+**Wrong socket path (shows `/tmp/ssh-...`)**
+- The SSHD devcontainer feature overrides `SSH_AUTH_SOCK`—remove it from `devcontainer.json`
+- `keychain` in shell config also overrides it—don't initialize keychain with agent forwarding
+
+**Test Docker Desktop forwarding directly:**
+```bash
+docker run --rm -it -v /run/host-services/ssh-auth.sock:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent alpine sh -c "apk add openssh-client && ssh-add -l"
+```
+If this shows your key, Docker Desktop forwarding works and the issue is in devcontainer config.
 
 ## Claude Code Integration
 
