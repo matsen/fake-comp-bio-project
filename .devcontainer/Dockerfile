@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     sudo \
     procps \
     tree \
-    keychain \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (for Claude Code)
@@ -113,12 +113,6 @@ cpth() {\n\
 \n\
 # Claude convenience aliases\n\
 alias yolo="claude --dangerously-skip-permissions"\n\
-\n\
-# Initialize keychain for SSH key management\n\
-if command -v keychain &> /dev/null; then\n\
-    # Start keychain and add SSH keys (will prompt for passphrase once per session)\n\
-    eval $(keychain --eval --quiet id_rsa id_ed25519 2>/dev/null)\n\
-fi\n\
 \n\
 # Auto-activate virtual environment if it exists\n\
 if [ -d "/workspace/.venv" ]; then\n\
