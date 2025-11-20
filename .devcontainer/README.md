@@ -105,15 +105,18 @@ Key demonstration features:
 
 ## SSH Agent Forwarding
 
-The devcontainer forwards your host's SSH agent via Docker Desktop's socket at `/run/host-services/ssh-auth.sock`. Your keys stay on the host—only the agent connection is forwarded.
+Docker Desktop for Mac automatically forwards your host's SSH agent into containers. Your keys stay on the host—only the agent connection is forwarded.
 
 ### Verify It's Working
 ```bash
 # In container
-echo $SSH_AUTH_SOCK   # Should show /run/host-services/ssh-auth.sock
 ssh-add -l            # Should show your key
 ssh -T git@github.com # Test GitHub access
 ```
+
+### How It Works
+
+Docker Desktop detects your host's `SSH_AUTH_SOCK` and automatically makes it available in the container. No explicit configuration needed.
 
 ### Troubleshooting
 
@@ -121,25 +124,14 @@ ssh -T git@github.com # Test GitHub access
 1. Check host has keys loaded: `ssh-add -l` on host
 2. On macOS, load keys with: `ssh-add --apple-use-keychain`
 
-**Wrong socket path (shows `/tmp/ssh-...`)**
-- The SSHD devcontainer feature overrides `SSH_AUTH_SOCK`—remove it from `devcontainer.json`
-- `keychain` in shell config also overrides it—don't initialize keychain with agent forwarding
-
-**Test Docker Desktop forwarding directly:**
-```bash
-docker run --rm -it -v /run/host-services/ssh-auth.sock:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent alpine sh -c "apk add openssh-client && ssh-add -l"
-```
-If this shows your key, Docker Desktop forwarding works and the issue is in devcontainer config.
-
 ## Claude Code Integration
 
 Claude Code is fully integrated with persistent authentication and settings:
 
 ### What Persists Across Rebuilds
-- ✅ Claude Code authentication (`.credentials.json`)
-- ✅ Claude Code settings (`settings.json`)
+- ✅ Claude Code settings (`settings.json`, `settings.local.json`)
 - ✅ Custom slash commands
-- ✅ Session state and analytics
+- ✅ Session state and analytics (`statsig/`)
 
 ### Custom Agents and Hooks
 To add custom agents or hooks, mount them in `devcontainer.json`:
