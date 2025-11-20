@@ -3,10 +3,9 @@
   "dockerFile": "Dockerfile",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.claude/.credentials.json,target=/home/vscode/.claude/.credentials.json,type=bind",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.claude/settings.json,target=/home/vscode/.claude/settings.json,type=bind",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.claude/settings.local.json,target=/home/vscode/.claude/settings.local.json,type=bind",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.claude/statsig,target=/home/vscode/.claude/statsig,type=bind",
+    "source=${localEnv:HOME}/.claude/settings.json,target=/home/vscode/.claude/settings.json,type=bind",
+    "source=${localEnv:HOME}/.claude/settings.local.json,target=/home/vscode/.claude/settings.local.json,type=bind",
+    "source=${localEnv:HOME}/.claude/statsig,target=/home/vscode/.claude/statsig,type=bind",
     "source=/run/host-services/ssh-auth.sock,target=/run/host-services/ssh-auth.sock,type=bind"
   ],
   "containerEnv": {
